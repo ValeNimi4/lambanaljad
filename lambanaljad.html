@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<title>Lambanaljad</title>
+<link href="https://fonts.googleapis.com/css2?family=Comic+Relief&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<style>
+.peidus {
+  display: none;
+}
+#yks, #kaks, #kolm {margin-top: 100px; height: calc(100vh - 50px); width: 100%; overflow-y: auto;word-wrap: break-word;}
+#uleval {position: fixed; top:0; left: 0; width: 100%; background-image: linear-gradient(lightblue, lightgray);height: 30px; transition: height 1s; overflow: hidden;}
+html {
+scroll-behavior: smooth;
+}
+i {color: darkgray;}
+a, a:link, a:visited {color: blue;}
+.menuu { float: right; margin-right: 20px;  }
+body {font-family: "Comic Relief", system-ui; background-color: lightgray; overflow-y: hidden; font-size: 15px;}
+#suur {height: 10vh;}
+#vaike {height: 20px;}
+button {border: none; font-family: "Comic Relief", system-ui; border-radius: 5px; padding: 5px; color: black; background: linear-gradient(lightgreen, lightblue); z-index: 10}
+input {width: 35%; font-family: "Comic Relief", system-ui; border-image: linear-gradient(lightgreen, lightblue) 30 round; border-width: 5px; border-radius: 5px}
+</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<span id="uleval"><img src="lambanaljad_logo.svg" id="vaike"> lambanaljad <a class="menuu" href="#kolm">täiusta</a> <a class="menuu" href="#kaks">naljad</a> <a class="menuu" href="#yks">info</a>
+</span>
+<div id="yks"><br><br>Teretulemast lehele lambanaljad!<br>See leht on väga-väga uus ja selle tegi <a href="/">valeNimi4</a><br>(Praegu) pisikese naljakataloogi uurimiseks mine <a href="#kaks">naljadesse</a> <br>Kui tahad nalja lisada
+mine <a href="#kolm">täiustamisse</a> ja logi sisse/tee konto ning saadki nalja lisada.<br>
+Hea lambanali ei solva ja on legaalne. Hea lambanaljataja on lugupidav, inimene (mitte robot) ja viisakas<br>Ohutuse huvides on siin ka mingid piirangud, nt nalja pikkus<br>Kogub neid andmeid: kellaeg, nali, email, supabase kasutaja number</div>
+<div id="kaks"><br><br><br></div>
+<div id="kolm"><br><br>
+<p>TÄIUSTAMISE LEHEL VÕIB ESINEDA PROBLEEME!!!</p>
+<div id="l">
+<input id="e" placeholder="email">
+<button id="auth1">SISENE</button>
+</div>
+<div id="o" class="peidus">
+Teile saadeti emailile link. Palun klõpsake selles kirjas kinnita sisenemiseks.
+</div>
+<div id="f" class="peidus">
+  <button id="v">Logi välja</button><br>
+  <input id="t" placeholder="nali">
+  <button id="lisa">LISA</button>
+<br><input id="k_id" type="number" placeholder="id"><button id="kustuta">KUSTUTA</button></div><br><div id="MINU"></div>
+<!-- <button  onclick="const elmnt = document.getElementsByTagName('i');for (let i = 0; i < elmnt.length; i++) {elmnt[i].style.visibility = 'visible';}">Näita üksikasju</button> -->
+<script type="module">
+
+import { createClient } from "https://esm.sh/@supabase/supabase-js"
+const s = createClient("https://iqrrffhjxakqvlshonbr.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlxcnJmZmhqeGFrcXZsc2hvbmJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNTAxMzgsImV4cCI6MjA3NTkyNjEzOH0.kqOJ9Ui08Z8dXLGSE3dKXRl436_OKkqli3hbTrQAufA")
+if (!location.hash) {location.hash = "#yks"}
+var info;
+var viga;
+var info2;
+var error;
+var data;
+await s.auth.exchangeCodeForSession(location.href);
+
+({data, error} = await s.auth.getSession());
+s.auth.onAuthStateChange((event, session) => {
+  if (event === 'SIGNED_IN' && session) {
+	console.log("SISSELOGITUD!");
+	o.classList.add("peidus");
+	f.classList.remove("peidus");
+  }
+});
+if (error) {alert(error.message)} else {if(data.session) { l.classList.add("peidus"); f.classList.remove("peidus");}}
+auth1.onclick = async () => {
+try {
+await s.auth.signInWithOtp({
+  email: e.value,
+  options: {
+    emailRedirectTo: 'http://valeNimi4.github.io/lambanaljad'
+}})
+ l.classList.add("peidus"); o.classList.remove("peidus");} 
+catch (error) {/*await s.auth.signOut();*/
+alert(error.message)}}
+v.onclick = async () => {info = await s.auth.signOut(); if (info.error) {alert(info.error.message)} else {location.reload()}}
+lisa.onclick = async () => {
+try {
+  const { data:{user} } = await s.auth.getUser()
+  info = await s.from("lambanaljad_eivaata").insert({ user_id:user.id, text: t.value });
+  if (info.error) {throw info.error}
+  t.value = ""
+  load()
+}catch (err) {
+alert(err.message)}}
+kustuta.onclick = async () => {info = await s.from("lambanaljad").delete().eq("id", k_id.value); if (info.error) {alert(info.error.message)} else {load()}}
+const load = async () => {try{
+const kiri = "";
+  ({data: info, error: viga} = await s.from("lambanaljad").select("*"));
+  ({data: info2, error: viga} = await s.from("lambanaljad_eivaata").select("*"));
+    if (viga) {throw viga}
+  kaks.innerHTML = "<br><br>" + info.map(r=>`<i>${r.id}</i>${r.text.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;")}<i>${r.created_at}</i><br>`);
+  MINU.innerHTML = info2.map(r=>`<i>${r.id}</i>${r.text.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;")}<i>${r.created_at}</i><br>`);
+  console.log(info2.map(r=>`<i>${r.id}</i>${r.text.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;")}<i>${r.created_at}</i><br>`));
+ } catch (error) {alert(info.error.message)}}
+load()
+</script>
+</body>
+</html>
