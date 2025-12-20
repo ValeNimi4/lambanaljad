@@ -8,7 +8,7 @@ p {font-family: monospace; animation-name: a; animation-duration: 1s; overflow-x
 </style>
 </head>
 <body>
-<img src="/logo.svg">
+<img src="logo.svg">
 <p id="p">Login Teid sisse...</p>
 <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js'
@@ -17,7 +17,7 @@ p {font-family: monospace; animation-name: a; animation-duration: 1s; overflow-x
       'https://iqrrffhjxakqvlshonbr.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlxcnJmZmhqeGFrcXZsc2hvbmJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNTAxMzgsImV4cCI6MjA3NTkyNjEzOH0.kqOJ9Ui08Z8dXLGSE3dKXRl436_OKkqli3hbTrQAufA'
     )
-
+	if (location.search.includes('code=')) {
     const { data, error } =
       await supabase.auth.exchangeCodeForSession(window.location.href)
 
@@ -25,7 +25,8 @@ p {font-family: monospace; animation-name: a; animation-duration: 1s; overflow-x
 		alert(error);
     } else {
 		window.location.replace("/lambanaljad/");
-    }
+    }}
 </script>
 </body>
+
 </html>
