@@ -57,7 +57,6 @@ var viga;
 var info2;
 var error;
 var data;
-await s.auth.exchangeCodeForSession(location.href);
 
 ({data, error} = await s.auth.getSession());
 s.auth.onAuthStateChange((event, session) => {
@@ -73,7 +72,7 @@ try {
 await s.auth.signInWithOtp({
   email: e.value,
   options: {
-    emailRedirectTo: 'http://valeNimi4.github.io/lambanaljad'
+    emailRedirectTo: 'http://valeNimi4.github.io/magiclink.html'
 }})
  l.classList.add("peidus"); o.classList.remove("peidus");} 
 catch (error) {/*await s.auth.signOut();*/
@@ -102,3 +101,4 @@ load()
 </script>
 </body>
 </html>
+
