@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="et">
+<head><title>Lambanaljadesse sisselogimine</title>
+<style>
+@keyframes a {
+from {width: 0rem} to {width: 19rem}}
+p {font-family: monospace; animation-name: a; animation-duration: 1s; overflow-x: hidden; animation-iteration-count: infinite; white-space: nowrap;}
+</style>
+</head>
+<body>
+<img src="/logo.svg">
+<p id="p">Login Teid sisse...</p>
+<script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js'
+
+    const supabase = createClient(
+      'https://iqrrffhjxakqvlshonbr.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlxcnJmZmhqeGFrcXZsc2hvbmJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNTAxMzgsImV4cCI6MjA3NTkyNjEzOH0.kqOJ9Ui08Z8dXLGSE3dKXRl436_OKkqli3hbTrQAufA'
+    )
+
+    const { data, error } =
+      await supabase.auth.exchangeCodeForSession(window.location.href)
+
+    if (error) {
+		alert(error);
+    } else {
+		window.location.replace("/lambanaljad/");
+    }
+</script>
+</body>
+</html>
